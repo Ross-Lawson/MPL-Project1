@@ -5,7 +5,7 @@ sys.setrecursionlimit(1500)
 
 size = 8
 total = size * size
-gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
+#gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
 
 obstacles = int(total * 0.25)
 stars = int(total * 0.2)
@@ -21,8 +21,7 @@ def PlaceObjects(state, num):
             
             if gamegrid[ranx][rany] == 0:                   #Checks if empty
                 gamegrid[ranx][rany] = control[state]       #Sets to new state
-                break                                       #Breaks out while
-    
+                break                                       #Breaks out while loop
     return
 
 def OutputGrid(grid):
@@ -31,7 +30,6 @@ def OutputGrid(grid):
         for val in row:
             out = str(out) + " " + str(val)
         print out
-    
 
 def find(grid):
    for row, i in enumerate(grid):
@@ -58,8 +56,6 @@ def test(grid):
     except IndexError:
         return False
     
-
-
 while True:
     gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
     
