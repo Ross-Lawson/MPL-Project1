@@ -3,8 +3,9 @@ import random
 import sys
 sys.setrecursionlimit(1500)
 
-size = 8
-total = size * size
+gridWidth = 12
+gridHeight = 8
+total = gridHeight * gridWidth
 #gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
 
 obstacles = int(total * 0.25)
@@ -16,8 +17,8 @@ control = [0, 1, 2, 3, 4]
 def PlaceObjects(state, num):
     for i in range(num):                                    #For each required instance of the object
         while True:
-            ranx = random.randint(0, size-1)                #Selects random square
-            rany = random.randint(0, size-1)
+            ranx = random.randint(0, gridHeight-1)                #Selects random square
+            rany = random.randint(0, gridWidth-1)
             
             if gamegrid[ranx][rany] == 0:                   #Checks if empty
                 gamegrid[ranx][rany] = control[state]       #Sets to new state
@@ -44,11 +45,11 @@ def test(grid):
     row, column = find(grid)
     
     try:
-        if grid[row+1][column] == 0 and row+1 <= size:
+        if grid[row+1][column] == 0 and row+1 <= gridHeight:
             return True
         if grid[row-1][column] == 0 and row-1 >= 0:
             return True
-        if grid[row][column+1] == 0 and column <= size:
+        if grid[row][column+1] == 0 and column <= gridWidth:
             return True
         if grid[row][column-1] == 0 and column-1 >= 0:
             return True
@@ -57,7 +58,7 @@ def test(grid):
         return False
     
 while True:
-    gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
+    gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
     
     PlaceObjects(1, obstacles)
     PlaceObjects(2, 1)
