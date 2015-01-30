@@ -1,3 +1,4 @@
+from __future__ import division
 
 import os
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -8,6 +9,7 @@ sys.setrecursionlimit(1500)
 
 import pygame
 import random
+import math
 
 #config vars
 gridWidth = 12
@@ -84,45 +86,60 @@ OutputGrid(gamegrid)
 
 #Graphical stuff
 pygame.init()
-gridOutputSize = 32
-gridColour = {
-	0: (255,255,255),
-	1: (0,0,0),
-	2: (255,0,0),
-	3: (0,255,0)
+gridOutputSize = 32 # the pixel size of each square
+gridColour = { # default colours for square types that do not have textures
+	0: (255,255,255), # empty
+	1: (0,0,0), # obstacle
+	2: (255,0,0), # goal
+	3: (0,255,0) # star
 }
-charPos = {
+charPos = { # character position, in squares, 0,0 is the top left square, 1,0 is one square right from the top left etc.
 	'x' : 0,
 	'y' : 0
 }
-textures = {
-	'char' : pygame.image.load('char.png')
-	#'star' : pygame.image.load('star.png')
+textures = { # texture definitions
+	'char' : pygame.image.load('char.png'),
+	'grass' : pygame.image.load('grass.png'), # square background
+	1 : pygame.image.load('rock.png'), # obstacle
+	2 : pygame.image.load('heart.png'), # goal
+	3 : pygame.image.load('star.png') # star
 }
 textureRects = {}
 for i, img in textures.iteritems():
 	textureRects[i] = img.get_rect()
+print textureRects
 
 screen = pygame.display.set_mode((gridWidth*gridOutputSize,gridHeight*gridOutputSize))
 clock = pygame.time.Clock()
+frame = 1 # sprite-frame counter, defined which area of the sprite to draw
+animationSpeed = 2 # lower is faster
 
 def BufferScreen(grid):
-	for y, valy in enumerate(grid):
-		for x, valx in enumerate(grid[y]):
-			pygame.draw.rect(screen, (0,0,0), (x*gridOutputSize,y*gridOutputSize,gridOutputSize,gridOutputSize),1)
-			pygame.draw.rect(screen, gridColour[valx], (x*gridOutputSize+5,y*gridOutputSize+5,gridOutputSize-10,gridOutputSize-10),0)
-	screen.blit(textures['char'], [charPos['x'] * gridOutputSize, charPos['y'] * gridOutputSize])
+	global frame
+	realFrame = math.ceil(frame/animationSpeed) # repeat the same sprite position for animSpeed times
+	spritePos = pygame.Rect((realFrame-1)%4*gridOutputSize,(math.ceil(realFrame/4)-1)*gridOutputSize,gridOutputSize,gridOutputSize) # define the rect position of the current frame being displayed
+	for y, valy in enumerate(grid): # loop the rows
+		for x, valx in enumerate(grid[y]): # loop the columns
+			screen.blit(textures['grass'], [x * gridOutputSize, y * gridOutputSize])
+			if valx in textures: # if this square's content has a texture, draw it
+				if textureRects[valx].width == 128 and textureRects[valx].height == 64:
+					screen.blit(textures[valx], [x * gridOutputSize, y * gridOutputSize], spritePos)
+				else:
+					screen.blit(textures[valx], [x * gridOutputSize, y * gridOutputSize])
+	screen.blit(textures['char'], [charPos['x'] * gridOutputSize, charPos['y'] * gridOutputSize]) # draw the character
+	frame = frame + 1 # increment sprite-frame counter
+	if frame > 8*animationSpeed: # reset the sprite-frame counter if it's greater than 8
+		frame = 1
 	
 def DrawScreen():
-	pygame.display.flip()
-	
+	pygame.display.flip() # render the buffer
 	#catch close-window event (pressing x in the corner)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit(); sys.exit();
 
-while (True):
-	msElapsed = clock.tick(30)
-	screen.fill(bgColour)
-	BufferScreen(gamegrid)
-	DrawScreen()
+while (True): # endless loop to redraw the screen
+	msElapsed = clock.tick(30) # define the fps the game should try to run at
+	screen.fill(bgColour) # empty the screen
+	BufferScreen(gamegrid) # buffer everything to be drawn
+	DrawScreen() # draw them
