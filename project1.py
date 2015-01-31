@@ -86,7 +86,7 @@ OutputGrid(gamegrid)
 
 #Graphical stuff
 pygame.init()
-gridOutputSize = 32 # the pixel size of each square
+squareRenderSize = 64 # the pixel size of each square
 gridColour = { # default colours for square types that do not have textures
 	0: (255,255,255), # empty
 	1: (0,0,0), # obstacle
@@ -97,19 +97,26 @@ charPos = { # character position, in squares, 0,0 is the top left square, 1,0 is
 	'x' : 0,
 	'y' : 0
 }
-textures = { # texture definitions
+textures = { # texture definitions, they must be either 32x32 or 128x64 (8x 32x32 images that will be animated)
 	'char' : pygame.image.load('char.png'),
 	'grass' : pygame.image.load('grass.png'), # square background
 	1 : pygame.image.load('rock.png'), # obstacle
 	2 : pygame.image.load('heart.png'), # goal
 	3 : pygame.image.load('star.png') # star
 }
-textureRects = {}
+textureRects = {} # store texture dimensions into a variable
 for i, img in textures.iteritems():
-	textureRects[i] = img.get_rect()
-print textureRects
+	textureRects[i] = img.get_rect() # store the dimensions
+if squareRenderSize != 32: # scale textures if render scale is not the native 32px/square
+	renderScale = squareRenderSize/32 # store the scale
+	for i, rect in textureRects.iteritems():
+		scaledTexture = pygame.transform.scale(textures[i], (int(textureRects[i].width * renderScale), int(textureRects[i].height * renderScale))) # rescale the image
+		textures[i] = scaledTexture # save the rescaled image
+		textureRects[i].width = textureRects[i].width * renderScale # update the rect width to reflect new scale
+		textureRects[i].height = textureRects[i].height * renderScale # update the rect height to reflect new scale
 
-screen = pygame.display.set_mode((gridWidth*gridOutputSize,gridHeight*gridOutputSize))
+
+screen = pygame.display.set_mode((gridWidth*squareRenderSize,gridHeight*squareRenderSize)) # initialise the window
 clock = pygame.time.Clock()
 frame = 1 # sprite-frame counter, defined which area of the sprite to draw
 animationSpeed = 2 # lower is faster
@@ -117,16 +124,16 @@ animationSpeed = 2 # lower is faster
 def BufferScreen(grid):
 	global frame
 	realFrame = math.ceil(frame/animationSpeed) # repeat the same sprite position for animSpeed times
-	spritePos = pygame.Rect((realFrame-1)%4*gridOutputSize,(math.ceil(realFrame/4)-1)*gridOutputSize,gridOutputSize,gridOutputSize) # define the rect position of the current frame being displayed
+	spritePos = pygame.Rect((realFrame-1)%4*squareRenderSize,(math.ceil(realFrame/4)-1)*squareRenderSize,squareRenderSize,squareRenderSize) # define the rect position of the current frame being displayed
 	for y, valy in enumerate(grid): # loop the rows
 		for x, valx in enumerate(grid[y]): # loop the columns
-			screen.blit(textures['grass'], [x * gridOutputSize, y * gridOutputSize])
+			screen.blit(textures['grass'], [x * squareRenderSize, y * squareRenderSize])
 			if valx in textures: # if this square's content has a texture, draw it
-				if textureRects[valx].width == 128 and textureRects[valx].height == 64:
-					screen.blit(textures[valx], [x * gridOutputSize, y * gridOutputSize], spritePos)
-				else:
-					screen.blit(textures[valx], [x * gridOutputSize, y * gridOutputSize])
-	screen.blit(textures['char'], [charPos['x'] * gridOutputSize, charPos['y'] * gridOutputSize]) # draw the character
+				if textureRects[valx].width == 4*squareRenderSize and textureRects[valx].height == 2*squareRenderSize: # if the texture is an animated one
+					screen.blit(textures[valx], [x * squareRenderSize, y * squareRenderSize], spritePos)
+				else: # or a static one
+					screen.blit(textures[valx], [x * squareRenderSize, y * squareRenderSize])
+	screen.blit(textures['char'], [charPos['x'] * squareRenderSize, charPos['y'] * squareRenderSize], spritePos) # draw the character
 	frame = frame + 1 # increment sprite-frame counter
 	if frame > 8*animationSpeed: # reset the sprite-frame counter if it's greater than 8
 		frame = 1
