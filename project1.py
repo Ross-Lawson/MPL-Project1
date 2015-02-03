@@ -1,5 +1,6 @@
 from __future__ import division
 
+
 import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,18 +14,13 @@ gridHeight = 8
 total = gridHeight * gridWidth
 #gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
 =======
-import pygame
-import random
-import math
+
 
 #config vars
 gridWidth = 12
 gridHeight = 8
 bgColour = (255,255,255)
 
-#genereate grid
-total = gridWidth * gridHeight
->>>>>>> master
 
 obstacles = int(total * 0.25)
 stars = int(total * 0.2)
