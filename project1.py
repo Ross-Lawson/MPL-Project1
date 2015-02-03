@@ -1,13 +1,10 @@
 from __future__ import division
-import pygame
 import random
 import math
 
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
-
 import sys
-sys.path.append(cwd+'\pygame')
+sys.path.insert(0, '/usr/lib/python2.7/dist-packages/') # linux fix, install pygame with apt-get install python-pygame and it sould work
+import pygame
 
 #config vars
 gridWidth = 12
