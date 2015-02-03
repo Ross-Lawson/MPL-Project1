@@ -6,7 +6,7 @@ sys.setrecursionlimit(1500)
 gridWidth = 12
 gridHeight = 8
 total = gridHeight * gridWidth
-#gamegrid = [[0 for i in xrange(size)] for i in xrange(size)]
+#gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
 
 obstacles = int(total * 0.25)
 stars = int(total * 0.2)
