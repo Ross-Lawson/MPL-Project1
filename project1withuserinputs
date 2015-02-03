@@ -150,36 +150,21 @@ while (True): # endless loop to redraw the screen
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_a:
             x1=x1-1
-            msElapsed = clock.tick(30) # define the fps the game should try to run at
-            screen.fill(bgColour) # empty the screen
-            BufferScreen(gamegrid) # buffer everything to be drawn
-            DrawScreen() # draw them
+           
 
         if event.type == KEYDOWN and event.key == K_d:
             x1=x1+1
-            msElapsed = clock.tick(30) # define the fps the game should try to run at
-            screen.fill(bgColour) # empty the screen
-            BufferScreen(gamegrid) # buffer everything to be drawn
-            DrawScreen() # draw them
+            
 
         if event.type == KEYDOWN and event.key == K_s:
             y1=y1+1
-            msElapsed = clock.tick(30) # define the fps the game should try to run at
-            screen.fill(bgColour) # empty the screen
-            BufferScreen(gamegrid) # buffer everything to be drawn
-            DrawScreen() # draw them
+           
         if event.type == KEYDOWN and event.key == K_w:
             y1=y1-1
-            msElapsed = clock.tick(30) # define the fps the game should try to run at
-            screen.fill(bgColour) # empty the screen
-            BufferScreen(gamegrid) # buffer everything to be drawn
-            DrawScreen() # draw them
+            
         if x1<0:
             x1=x1+1
-            msElapsed = clock.tick(30) # define the fps the game should try to run at
-            screen.fill(bgColour) # empty the screen
-            BufferScreen(gamegrid) # buffer everything to be drawn
-            DrawScreen() # draw them
+            
         if y1<0:
             y1=y1+1
         if x1>11:
