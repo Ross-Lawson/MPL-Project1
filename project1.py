@@ -24,11 +24,11 @@ control = [0, 1, 2, 3, 4]
 def PlaceObjects(state, num):
     for i in range(num):                                    #For each required instance of the object
         while True:
-            ranx = random.randint(0, gridHeight-1)          #Selects random square
-            rany = random.randint(0, gridWidth-1)
+            ranx = random.randint(0, gridWidth-1)           #Selects random square
+            rany = random.randint(0, gridHeight-1)          
             
-            if gamegrid[ranx][rany] == 0:                   #Checks if empty
-                gamegrid[ranx][rany] = control[state]       #Sets to new state
+            if gamegrid[rany][ranx] == 0:                   #Checks if empty
+                gamegrid[rany][ranx] = control[state]       #Sets to new state
                 break                                       #Breaks out while loop
     return
 
@@ -65,7 +65,7 @@ def test(grid):
         return False
     
 while True:
-    gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
+    gamegrid = [[0 for i in xrange(gridWidth)] for i in xrange(gridHeight)]
     
     PlaceObjects(1, obstacles)
     PlaceObjects(2, 1)
