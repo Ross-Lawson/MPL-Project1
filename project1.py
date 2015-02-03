@@ -1,26 +1,19 @@
 from __future__ import division
-
+import pygame
+import random
+import math
 
 import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 import sys
 sys.path.append(cwd+'\pygame')
-sys.setrecursionlimit(1500)
-
-<<<<<<< HEAD
-gridWidth = 12
-gridHeight = 8
-total = gridHeight * gridWidth
-#gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
-=======
-
 
 #config vars
 gridWidth = 12
 gridHeight = 8
+total = gridHeight * gridWidth
 bgColour = (255,255,255)
-
 
 obstacles = int(total * 0.25)
 stars = int(total * 0.2)
