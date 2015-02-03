@@ -1,23 +1,19 @@
 from __future__ import division
+import pygame
+import random
+import math
 
 import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 import sys
 sys.path.append(cwd+'\pygame')
-sys.setrecursionlimit(1500)
-
-import pygame
-import random
-import math
 
 #config vars
 gridWidth = 12
 gridHeight = 8
+total = gridHeight * gridWidth
 bgColour = (255,255,255)
-
-#genereate grid
-total = gridWidth * gridHeight
 
 obstacles = int(total * 0.25)
 stars = int(total * 0.2)
@@ -28,13 +24,12 @@ control = [0, 1, 2, 3, 4]
 def PlaceObjects(state, num):
     for i in range(num):                                    #For each required instance of the object
         while True:
-            ranx = random.randint(0, gridWidth-1)			#Selects random square
-            rany = random.randint(0, gridHeight-1)           
+            ranx = random.randint(0, gridHeight-1)          #Selects random square
+            rany = random.randint(0, gridWidth-1)
             
-            if gamegrid[rany][ranx] == 0:                   #Checks if empty
-                gamegrid[rany][ranx] = control[state]       #Sets to new state
-                break                                       #Breaks out while
-    
+            if gamegrid[ranx][rany] == 0:                   #Checks if empty
+                gamegrid[ranx][rany] = control[state]       #Sets to new state
+                break                                       #Breaks out while loop
     return
 
 def OutputGrid(grid):
@@ -43,7 +38,6 @@ def OutputGrid(grid):
         for val in row:
             out = str(out) + " " + str(val)
         print out
-	print
 
 def find(grid):
    for row, i in enumerate(grid):
@@ -58,11 +52,11 @@ def test(grid):
     row, column = find(grid)
     
     try:
-        if grid[row+1][column] == 0 and row+1 <= gridWidth:
+        if grid[row+1][column] == 0 and row+1 <= gridHeight:
             return True
         if grid[row-1][column] == 0 and row-1 >= 0:
             return True
-        if grid[row][column+1] == 0 and column <= gridHeight:
+        if grid[row][column+1] == 0 and column <= gridWidth:
             return True
         if grid[row][column-1] == 0 and column-1 >= 0:
             return True
@@ -70,17 +64,16 @@ def test(grid):
     except IndexError:
         return False
     
-unsolvable = True
-while unsolvable:
-	gamegrid = [[0 for i in xrange(gridWidth)] for i in xrange(gridHeight)]
-
-	PlaceObjects(1, obstacles)
-	PlaceObjects(2, 1)
-	PlaceObjects(3, stars)
-	temp = test(gamegrid)
-
-	if temp == True:
-		unsolvable = False
+while True:
+    gamegrid = [[0 for i in xrange(gridHeight)] for i in xrange(gridWidth)]
+    
+    PlaceObjects(1, obstacles)
+    PlaceObjects(2, 1)
+    PlaceObjects(3, stars)
+    temp = test(gamegrid)
+    
+    if temp == True:
+        break
 
 OutputGrid(gamegrid)
 
